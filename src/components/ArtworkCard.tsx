@@ -14,7 +14,12 @@ type ArtworkCardProps = {
 function imageSrc(iiifUrl: string, imageId: string | null): string | null {
   if (!imageId) return null
   const base = iiifUrl.replace(/\/$/, '')
-  return `${base}/${imageId}/full/843,/0/default.jpg`
+  const remote = `${base}/${imageId}/full/843,/0/default.jpg`
+  try {
+    return new URL(remote).pathname
+  } catch {
+    return remote
+  }
 }
 
 export default function ArtworkCard({

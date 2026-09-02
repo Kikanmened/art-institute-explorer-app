@@ -9,14 +9,18 @@ export const ArtworkSchema = z.object({
 
 export type Artwork = z.infer<typeof ArtworkSchema>
 
+export const NoteSchema = z.string().trim().max(280).default('')
+
 export const SearchResponseSchema = z.object({
   data: z.array(z.unknown()),
   config: z.object({
     iiif_url: z.url(),
   }),
 })
+
 export const GalleryItemSchema = ArtworkSchema.extend({
   iiifUrl: z.string().min(1),
+  note: NoteSchema,
 })
 
 export const GallerySchema = z.array(GalleryItemSchema)

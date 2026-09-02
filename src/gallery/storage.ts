@@ -1,6 +1,7 @@
 import { z } from 'zod/v4'
 import {
   GallerySchema,
+  NoteSchema,
   type Artwork,
   type GalleryItem,
 } from '../schemas/artwork'
@@ -34,7 +35,33 @@ export function addToGallery(
 ): GalleryItem[] {
   if (items.some((item) => item.id === artwork.id)) return items
 
-  const next: GalleryItem[] = [...items, { ...artwork, iiifUrl }]
+  const next: GalleryItem[] = [...items, { ...artwork, iiifUrl, note: '' }]
+  saveGallery(next)
+  return next
+}
+
+export function updateNote(
+  items: GalleryItem[],
+  id: number,
+  note: string,
+): GalleryItem[] {
+  const { data, error, success } = NoteSchema.safeParse(note)
+  if (!success) {
+    throw new Error(z.prettifyError(error))
+  }
+
+  const next = items.map((item) =>
+    item.id === id ? { ...item, note: data } : item,
+  )
+  saveGallery(next)
+  return next
+}
+
+export function removeFromGallery(
+  items: GalleryItem[],
+  id: number,
+): GalleryItem[] {
+  const next = items.filter((item) => item.id !== id)
   saveGallery(next)
   return next
 }

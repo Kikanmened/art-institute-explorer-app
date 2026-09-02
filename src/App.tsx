@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router'
 import Layout from './components/Layout'
-import { addToGallery, loadGallery } from './gallery/storage'
+import {
+  addToGallery,
+  loadGallery,
+  removeFromGallery,
+  updateNote,
+} from './gallery/storage'
 import GalleryPage from './pages/GalleryPage'
 import SearchPage from './pages/SearchPage'
 import { type Artwork, type GalleryItem } from './schemas/artwork'
@@ -9,6 +14,8 @@ import { type Artwork, type GalleryItem } from './schemas/artwork'
 export type GalleryContext = {
   gallery: GalleryItem[]
   addArtwork: (artwork: Artwork, iiifUrl: string) => void
+  updateArtworkNote: (id: number, note: string) => void
+  removeArtwork: (id: number) => void
 }
 
 function AppLayout() {
@@ -18,9 +25,26 @@ function AppLayout() {
     setGallery((current) => addToGallery(current, artwork, iiifUrl))
   }
 
+  function updateArtworkNote(id: number, note: string) {
+    setGallery(updateNote(gallery, id, note))
+  }
+
+  function removeArtwork(id: number) {
+    setGallery(removeFromGallery(gallery, id))
+  }
+
   return (
     <Layout>
-      <Outlet context={{ gallery, addArtwork } satisfies GalleryContext} />
+      <Outlet
+        context={
+          {
+            gallery,
+            addArtwork,
+            updateArtworkNote,
+            removeArtwork,
+          } satisfies GalleryContext
+        }
+      />
     </Layout>
   )
 }

@@ -16,4 +16,4 @@ npm run dev
 - React Router (`/` search, `/gallery`)
 - Tailwind CSS + daisyUI
 
-Data fetching and Zod schemas come in later PRs.
+Search uses a Zod-validated AIC helper. The gallery is stored in `localStorage` and re-parsed with Zod on read. Notes are validated with `NoteSchema` before save.

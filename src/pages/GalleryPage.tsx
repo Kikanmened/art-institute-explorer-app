@@ -1,3 +1,23 @@
+import { useOutletContext } from 'react-router'
+import { type GalleryContext } from '../App'
+import ArtworkCard from '../components/ArtworkCard'
+
 export default function GalleryPage() {
-  return <h1>Gallery</h1>
+  const { gallery } = useOutletContext<GalleryContext>()
+
+  if (gallery.length === 0) {
+    return <p>Your gallery is empty. Search and add an artwork.</p>
+  }
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {gallery.map((item) => (
+        <ArtworkCard
+          key={item.id}
+          artwork={item}
+          iiifUrl={item.iiifUrl}
+        />
+      ))}
+    </div>
+  )
 }

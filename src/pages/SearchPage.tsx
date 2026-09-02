@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { getArtworks } from '../api/getArtworks'
 import ArtworkCard from '../components/ArtworkCard'
+import { useOutletContext } from 'react-router'
+import { type GalleryContext } from '../App'
 import { type Artwork } from '../schemas/artwork'
 
 export default function SearchPage() {
+  const { gallery, addArtwork } = useOutletContext<GalleryContext>()
   const [query, setQuery] = useState('')
   const [artworks, setArtworks] = useState<Artwork[]>([])
   const [loading, setLoading] = useState(false)
@@ -53,15 +56,17 @@ export default function SearchPage() {
           {error}
         </p>
       )}
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    {artworks.map((artwork) => (
-      <ArtworkCard
-        key={artwork.id}
-        artwork={artwork}
-        iiifUrl={iiifUrl}
-      />
-    ))}
-  </div>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {artworks.map((artwork) => (
+          <ArtworkCard
+            key={artwork.id}
+            artwork={artwork}
+            iiifUrl={iiifUrl}
+            isSaved={gallery.some((item) => item.id === artwork.id)}
+            onAdd={() => addArtwork(artwork, iiifUrl)}
+          />
+        ))}
+      </div>
     </form>
   )
 }

@@ -15,3 +15,10 @@ export const SearchResponseSchema = z.object({
     iiif_url: z.url(),
   }),
 })
+export const GalleryItemSchema = ArtworkSchema.extend({
+  iiifUrl: z.string().min(1),
+})
+
+export const GallerySchema = z.array(GalleryItemSchema)
+
+export type GalleryItem = z.infer<typeof GalleryItemSchema>

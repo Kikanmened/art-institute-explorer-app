@@ -3,6 +3,8 @@ import { type Artwork } from '../schemas/artwork'
 type ArtworkCardProps = {
   artwork: Artwork
   iiifUrl: string
+  onAdd?: () => void
+  isSaved?: boolean
 }
 
 function imageSrc(iiifUrl: string, imageId: string | null): string | null {
@@ -11,7 +13,12 @@ function imageSrc(iiifUrl: string, imageId: string | null): string | null {
   return `${base}/${imageId}/full/843,/0/default.jpg`
 }
 
-export default function ArtworkCard({ artwork, iiifUrl }: ArtworkCardProps) {
+export default function ArtworkCard({
+  artwork,
+  iiifUrl,
+  onAdd,
+  isSaved,
+}: ArtworkCardProps) {
   const src = imageSrc(iiifUrl, artwork.image_id)
   const artist = artwork.artist_title ?? 'Unknown artist'
 
@@ -31,7 +38,21 @@ export default function ArtworkCard({ artwork, iiifUrl }: ArtworkCardProps) {
       <div className="card-body">
         <h2 className="card-title">{artwork.title}</h2>
         <p>{artist}</p>
+        {onAdd && (
+          <div className="card-actions">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={onAdd}
+              disabled={isSaved}
+            >
+              {isSaved ? 'In gallery' : 'Add to Gallery'}
+            </button>
+          </div>
+        )}
       </div>
     </article>
   )
 }
+
+

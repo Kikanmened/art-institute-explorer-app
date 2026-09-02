@@ -3,7 +3,9 @@ import { ArtworkSchema, SearchResponseSchema, type Artwork } from '../schemas/ar
 
 const SEARCH_URL = 'https://api.artic.edu/api/v1/artworks/search'
 
-export async function getArtworks(query: string): Promise<Artwork[]> {
+export async function getArtworks(
+  query: string,
+): Promise<{ artworks: Artwork[]; iiifUrl: string }> {
   const trimmed = query.trim()
   if (trimmed.length < 1) {
     throw new Error('Search query must not be empty')
@@ -31,5 +33,5 @@ export async function getArtworks(query: string): Promise<Artwork[]> {
     }
   }
 
-  return artworks
+  return { artworks, iiifUrl: String(data.config.iiif_url) }
 }
